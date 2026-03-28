@@ -12,19 +12,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Write private key file
-        run: |
-          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" > key.p8
+        with:
+          persist-credentials: false
 
       - name: Install Snowflake CLI
-        uses: Snowflake-Labs/snowflake-cli-action@v3
+        uses: snowflakedb/snowflake-cli-action@v2.0
 
       - name: Fetch Git Repo in Snowflake
+        env:
+          SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_ROLE: DCM_ADMIN
+          SNOWFLAKE_WAREHOUSE: COMPUTE_WH
         run: |
-          snow sql -q "ALTER GIT REPOSITORY INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO FETCH;"
+          snow sql -q "ALTER GIT REPOSITORY INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO FETCH;" -x
 
       - name: Run DCM Plan (DEV)
+        env:
+          SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_ROLE: DCM_ADMIN
+          SNOWFLAKE_WAREHOUSE: COMPUTE_WH
         run: |
           snow sql -q "
             EXECUTE DCM PROJECT DEV_SF_DB.PUBLIC.SALESFORCE_DCM_DEV
@@ -32,7 +44,7 @@ jobs:
               USING CONFIGURATION dev
             FROM
               @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/${{ github.head_ref }}/;
-          " --format json > plan_output.json
+          " -x --format json > plan_output.json
           cat plan_output.json
 
       - name: Post Plan Output to PR
