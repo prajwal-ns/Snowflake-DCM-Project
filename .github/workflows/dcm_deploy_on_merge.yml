@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'Salesforce_DCM/**'
+      - 'sources/**'
+      - 'manifest.yml'
 
 jobs:
   deploy-dev:
@@ -33,7 +34,7 @@ jobs:
               PLAN
               USING CONFIGURATION dev
             FROM
-              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/Salesforce_DCM;
+              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/;
           "
 
       - name: Deploy DEV
@@ -43,7 +44,7 @@ jobs:
               DEPLOY AS \"CI/CD deploy - commit ${{ github.sha }}\"
               USING CONFIGURATION dev
             FROM
-              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/Salesforce_DCM;
+              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/;
           "
 
       - name: Verify DEV Deployment
@@ -78,7 +79,7 @@ jobs:
               PLAN
               USING CONFIGURATION prod
             FROM
-              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/Salesforce_DCM;
+              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/;
           "
 
       - name: Deploy PROD
@@ -88,7 +89,7 @@ jobs:
               DEPLOY AS \"CI/CD deploy - commit ${{ github.sha }}\"
               USING CONFIGURATION prod
             FROM
-              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/Salesforce_DCM;
+              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/main/;
           "
 
       - name: Verify PROD Deployment
