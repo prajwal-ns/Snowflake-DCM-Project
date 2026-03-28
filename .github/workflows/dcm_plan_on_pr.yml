@@ -4,7 +4,8 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'Salesforce_DCM/**'
+      - 'sources/**'
+      - 'manifest.yml'
 
 jobs:
   plan:
@@ -33,7 +34,7 @@ jobs:
               PLAN
               USING CONFIGURATION dev
             FROM
-              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/${{ github.head_ref }}/Salesforce_DCM;
+              @INTEGRATIONS.GITHUB.SALESFORCE_DCM_REPO/branches/${{ github.head_ref }}/;
           " --format json > plan_output.json
           cat plan_output.json
 
