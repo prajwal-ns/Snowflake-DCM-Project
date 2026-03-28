@@ -1,0 +1,29 @@
+manifest_version: 2
+type: DCM_PROJECT
+
+default_target: dev
+
+targets:
+  dev:
+    account_identifier: ufc94094
+    project_name: DEV_SF_DB.PUBLIC.SALESFORCE_DCM_DEV
+    project_owner: DCM_ADMIN
+    templating_config: dev
+
+  prod:
+    account_identifier: ufc94094
+    project_name: PROD_SF_DB.PUBLIC.SALESFORCE_DCM_PROD
+    project_owner: DCM_ADMIN
+    templating_config: prod
+
+templating:
+  defaults:
+    env: "DEV"
+    sf_db: "DEV_SF_DB"
+  configurations:
+    dev:
+      env: "DEV"
+      sf_db: "DEV_SF_DB"
+    prod:
+      env: "PROD"
+      sf_db: "PROD_SF_DB"

@@ -1,0 +1,7 @@
+[connections.default]
+account = "ufc94094"
+user = "SVC_DCM_CICD"
+authenticator = "SNOWFLAKE_JWT"
+private_key_file = "key.p8"
+role = "DCM_ADMIN"
+warehouse = "COMPUTE_WH"
